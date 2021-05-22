@@ -26,5 +26,4 @@ cloudinary==1.25.0
 six==1.16.0
 django-cloudinary-storage
 psycopg2-binary
-dj-database-url
 python-dotenv
