@@ -7,6 +7,7 @@ from login import models
 from rest_framework.views import APIView
 from django.contrib.auth.models import User
 
+import json
 
 from django.contrib.auth.hashers import check_password
 
@@ -30,8 +31,13 @@ class registration_request(APIView):
 
 class login_view(APIView):
 	def post(self, request):
-		username = request.data.get('username')
-		password = request.data.get('password')
+
+		# json.loads(request.body.decode('utf-8'))
+		try:
+			username = request.data.get('username')
+			password = request.data.get('password')
+		except:
+			return Response({'detail' : 'could not read data'}, status=status.HTTP_404_NOT_FOUND)
 
 
 		try:
