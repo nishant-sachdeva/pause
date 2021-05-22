@@ -43,10 +43,9 @@ class login_view(APIView):
 		try:
 			user_object = User.objects.get(username=username)
 		except:
-			return Response({"detail" : "username is wrong"}, status=status.HTTP_404_NOT_FOUND)
+			return Response({"detail" : "username is wrong"}, status=status.HTTP_400_BAD_REQUEST)
 		
 		if check_password(password, user_object.password):
-		
 			try:
 				token = Token.objects.get(user=user_object).key
 
@@ -55,9 +54,9 @@ class login_view(APIView):
 
 				return Response(data, status=status.HTTP_200_OK)			
 			except:
-				return Response({'detail' : 'login failed'}, status=status.HTTP_404_NOT_FOUND)
+				return Response({'detail' : 'login failed'}, status=status.HTTP_409_CONFLICT)
 		else:
-			return Response({"detail" : "password is wrong"}, status=status.HTTP_404_NOT_FOUND)
+			return Response({"detail" : "password is wrong"}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 class logout_view(APIView):
