@@ -19,6 +19,7 @@ class registration_request(APIView):
 			print("we have the new user object")
 			account = serializer.save()
 			data = serializer.data
+			data['user'] = data['username']
 
 			token = Token.objects.get(user=account).key
 			data['token'] = token
@@ -46,10 +47,12 @@ class login_view(APIView):
 		
 		if check_password(password, user_object.password):
 			try:
-				token = Token.objects.get_or_create(user=user_object).key
+				Token.objects.get_or_create(user=user_object)
+				token = Token.objects.get(user=user_object).key
 
 				data = {}
 				data['token'] = token
+				data['user'] = user_object.username
 
 				return Response(data, status=status.HTTP_200_OK)			
 			except:
