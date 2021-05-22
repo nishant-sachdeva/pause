@@ -43,7 +43,7 @@ class login_view(APIView):
 		try:
 			user_object = User.objects.get(username=username)
 		except:
-			return Response({"detail" : "username is wrong"}, status=status.HTTP_400_BAD_REQUEST)
+			return Response({"detail" : "username is wrong"}, status=status.HTTP_404_NOT_FOUND)
 		
 		if check_password(password, user_object.password):
 		
@@ -55,9 +55,9 @@ class login_view(APIView):
 
 				return Response(data, status=status.HTTP_200_OK)			
 			except:
-				return Response({'detail' : 'login failed'}, status=status.HTTP_400_BAD_REQUEST)
+				return Response({'detail' : 'login failed'}, status=status.HTTP_404_NOT_FOUND)
 		else:
-			return Response({"detail" : "password is wrong"}, status=status.HTTP_400_BAD_REQUEST)
+			return Response({"detail" : "password is wrong"}, status=status.HTTP_404_NOT_FOUND)
 
 
 class logout_view(APIView):
