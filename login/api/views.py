@@ -7,8 +7,6 @@ from login import models
 from rest_framework.views import APIView
 from django.contrib.auth.models import User
 
-import json
-
 from django.contrib.auth.hashers import check_password
 
 class registration_request(APIView):
@@ -22,8 +20,9 @@ class registration_request(APIView):
 			account = serializer.save()
 			data = serializer.data
 
-			token = Token.objects.get_or_create(user=account).key
+			token = Token.objects.get(user=account).key
 			data['token'] = token
+			data['is_first_time'] = True
 
 			return Response(data, status=status.HTTP_200_OK)
 		else:
