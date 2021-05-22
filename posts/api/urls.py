@@ -2,9 +2,10 @@ from rest_framework.authtoken.views import obtain_auth_token
 
 from django.urls import path
 
-from posts.api.views import PostListAV
+from posts.api.views import PostListAV, PostDetailAV
 
 
 urlpatterns = [
-	path('posts/', PostListAV.as_view(), name='posts'),
+	path('list/', PostListAV.as_view(), name='post_list'),
+	path('detail/', PostDetailAV.as_view(), name='post_detail'),
 ]

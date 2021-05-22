@@ -12,7 +12,7 @@ from posts.models import Post
 from posts.api.serializers import PostSerializer
 from posts.api.permissions import PostWriterOrAdminOrReadOnly
 
-def PostListAV(APIView):
+class PostListAV(APIView):
 	permission_classes = [PostWriterOrAdminOrReadOnly]
 	def get(self, request):
 
@@ -27,7 +27,7 @@ def PostListAV(APIView):
 		
 
 		try:
-			post_list = Post.objects.get(username=user_object.pk)
+			post_list = Post.objects.filter(username=user_object.pk)
 
 			serializer = PostSerializer(post_list, many=True)
 
@@ -49,8 +49,10 @@ def PostListAV(APIView):
 		except:
 			return Response({"detail" : "User does not exists"}, status=status.HTTP_400_BAD_REQUEST)
 		
+		data = request.data.copy()
 
-		serializer = PostSerializer(data = request.data)
+		data['username'] = user_object.pk
+		serializer = PostSerializer(data = data)
 
 		if serializer.is_valid():
 			serializer.save()
@@ -60,7 +62,7 @@ def PostListAV(APIView):
 			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-def PostDetailAV(APIView):
+class PostDetailAV(APIView):
 	permission_classes = [PostWriterOrAdminOrReadOnly]
 
 	def get(self,request):
@@ -101,7 +103,9 @@ def PostDetailAV(APIView):
 
 		self.check_object_permissions(request, post_object)
 
-		serializer = PostSerializer(post_object, data=request.data)
+		data = request.data.copy()
+		data['username'] = user_object.pk
+		serializer = PostSerializer(post_object, data=data)
 
 		if serializer.is_valid():
 			serializer.save()
