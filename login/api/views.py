@@ -22,7 +22,7 @@ class registration_request(APIView):
 			account = serializer.save()
 			data = serializer.data
 
-			token = Token.objects.get(user=account).key
+			token = Token.objects.get_or_create(user=account).key
 			data['token'] = token
 
 			return Response(data, status=status.HTTP_200_OK)
