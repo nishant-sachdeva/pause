@@ -47,7 +47,7 @@ class login_view(APIView):
 		
 		if check_password(password, user_object.password):
 			try:
-				token = Token.objects.get(user=user_object).key
+				token = Token.objects.get_or_create(user=user_object).key
 
 				data = {}
 				data['token'] = token
