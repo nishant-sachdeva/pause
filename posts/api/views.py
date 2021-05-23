@@ -12,32 +12,9 @@ from posts.models import Post
 from posts.api.serializers import PostSerializer
 from posts.api.permissions import PostWriterOrAdminOrReadOnly
 
-class PostListAV(APIView):
+
+class CreatPostAV(APIView):
 	permission_classes = [PostWriterOrAdminOrReadOnly]
-	def get(self, request):
-
-		username = request.data.get('username')
-
-		try:
-			user_object = User.objects.get(username=username)
-		except:
-			return Response({"detail" : "User does not exists"}, status=status.HTTP_400_BAD_REQUEST)
-		
-		# so we have the user, so, get all posts for the username
-		
-
-		try:
-			post_list = Post.objects.filter(username=user_object.pk)
-
-			serializer = PostSerializer(post_list, many=True)
-
-			return Response(serializer.data, status=status.HTTP_200_OK)
-
-		except:
-			return Response({"detail" : "Post not found"}, status=status.HTTP_400_BAD_REQUEST)
-
-
-
 	def post(self, request):
 
 		# here we have to make a new post for the user 
@@ -62,10 +39,36 @@ class PostListAV(APIView):
 			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class PostListAV(APIView):
+	permission_classes = [PostWriterOrAdminOrReadOnly]
+	def post(self, request):
+
+		username = request.data.get('username')
+
+		try:
+			user_object = User.objects.get(username=username)
+		except:
+			return Response({"detail" : "User does not exists"}, status=status.HTTP_400_BAD_REQUEST)
+		
+		# so we have the user, so, get all posts for the username
+		
+
+		try:
+			post_list = Post.objects.filter(username=user_object.pk)
+
+			serializer = PostSerializer(post_list, many=True)
+
+			return Response(serializer.data, status=status.HTTP_200_OK)
+
+		except:
+			return Response({"detail" : "Post not found"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
 class PostDetailAV(APIView):
 	permission_classes = [PostWriterOrAdminOrReadOnly]
 
-	def get(self,request):
+	def post(self,request):
 		username = request.data.get('username')
 		post_id  = request.data.get('post_id')
 		
