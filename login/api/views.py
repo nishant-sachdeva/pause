@@ -9,6 +9,19 @@ from django.contrib.auth.models import User
 
 from django.contrib.auth.hashers import check_password
 
+from posts.api.permissions import PostWriterOrAdminOrReadOnly
+
+
+class UserCountView(APIView):
+	def post(self, request):
+
+		try:
+			users = User.objects.all().count()
+			return Response({'users' : users}, status=status.HTTP_200_OK)
+		except:
+			return Response({"detail" : "Users not found"}, status=status.HTTP_400_BAD_REQUEST)
+			
+
 class registration_request(APIView):
 
 	def post(self, request):
